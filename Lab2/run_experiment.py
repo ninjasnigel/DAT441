@@ -15,7 +15,7 @@ spec.loader.exec_module(agentfile)
 
 # Initialize the environment
 try:
-    env = gym.make(args.env)
+    env = gym.make(args.env, is_slippery=False)
     print("Loaded ", args.env)
 except:
     file_name, env_name = args.env.split(":")
@@ -39,7 +39,7 @@ print("Agents found and instantiated: ", agents)
 for agent in agents:
 
     # Training loop
-    num_episodes = 10000
+    num_episodes = 20000
     max_steps_per_episode = 100
     rewards_all_episodes = []
 
@@ -60,11 +60,11 @@ for agent in agents:
 
             if done:
                 break
-        agent.epsilon = max(agent.epsilon_min, agent.epsilon * agent.epsilon_decay)
 
         rewards_all_episodes.append(total_rewards)
         if (episode + 1) % 100 == 0:
             print(f"Episode {episode + 1}: Total Reward = {total_rewards}")
+            #env.render()
 
     print("Training completed.")
 
