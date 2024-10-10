@@ -67,9 +67,10 @@ class ExpectedSARSA_Agent(Agent):
 
 
 class QLearningAgent(Agent):
-    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.8, epsilon=0.94):
+    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.8, epsilon=0.05):
         super().__init__(state_space, action_space)
-        self.q_table = np.zeros((state_space, action_space))
+        self.q_table = np.random.uniform(low=0.001, high=0.002, size=(state_space, action_space))
+        #self.q_table = np.zeros((state_space, action_space))
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon

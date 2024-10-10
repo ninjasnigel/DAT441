@@ -39,7 +39,7 @@ print("Agents found and instantiated: ", agents)
 for agent in agents:
 
     # Training loop
-    num_episodes = 20000
+    num_episodes = 100
     max_steps_per_episode = 100
     rewards_all_episodes = []
 
@@ -68,6 +68,15 @@ for agent in agents:
 
     print("Training completed.")
 
+    # Plot cumulative rewards
+    import matplotlib.pyplot as plt
+
+    cumulative_rewards = np.cumsum(rewards_all_episodes)
+    plt.plot(cumulative_rewards)
+    plt.xlabel('Episode')
+    plt.ylabel('Cumulative Reward')
+    plt.show()
+
     # Testing the trained agent
     num_test_episodes = 10
     for episode in range(num_test_episodes):
@@ -83,3 +92,4 @@ for agent in agents:
             total_rewards += reward
 
         print(f"Test Episode {episode + 1}: Total Reward = {total_rewards}")
+
