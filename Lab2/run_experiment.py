@@ -29,51 +29,57 @@ except:
 action_dim = env.action_space.n
 state_dim = env.observation_space.n
 
-# Initialize the agent
-agent = agentfile.QLearningAgent(state_dim, action_dim)
+agents = [agentfile.QLearningAgent(state_dim, action_dim), \
+          agentfile.SARSA_Agent(state_dim, action_dim), \
+            agentfile.ExpectedSARSA_Agent(state_dim, action_dim), \
+            agentfile.Double_QLearningAgent(state_dim, action_dim)]
+print("Agents found and instantiated: ", agents)
 
-# Training loop
-num_episodes = 10000
-max_steps_per_episode = 100
-rewards_all_episodes = []
 
-for episode in range(num_episodes):
-    state, info = env.reset()
-    done = False
-    total_rewards = 0
+for agent in agents:
 
-    for step in range(max_steps_per_episode):
-        action = agent.act(state)
-        next_state, reward, terminated, truncated, info = env.step(action)
-        done = terminated or truncated
+    # Training loop
+    num_episodes = 10000
+    max_steps_per_episode = 100
+    rewards_all_episodes = []
 
-        agent.observe(state, action, reward, next_state, done)
+    for episode in range(num_episodes):
+        state, info = env.reset()
+        done = False
+        total_rewards = 0
 
-        state = next_state
-        total_rewards += reward
+        for step in range(max_steps_per_episode):
+            action = agent.act(state)
+            next_state, reward, terminated, truncated, info = env.step(action)
+            done = terminated or truncated
 
-        if done:
-            break
-    agent.epsilon = max(agent.epsilon_min, agent.epsilon * agent.epsilon_decay)
+            agent.observe(state, action, reward, next_state, done)
 
-    rewards_all_episodes.append(total_rewards)
-    if (episode + 1) % 100 == 0:
-        print(f"Episode {episode + 1}: Total Reward = {total_rewards}")
+            state = next_state
+            total_rewards += reward
 
-print("Training completed.")
+            if done:
+                break
+        agent.epsilon = max(agent.epsilon_min, agent.epsilon * agent.epsilon_decay)
 
-# Testing the trained agent
-num_test_episodes = 10
-for episode in range(num_test_episodes):
-    state, info = env.reset()
-    done = False
-    total_rewards = 0
+        rewards_all_episodes.append(total_rewards)
+        if (episode + 1) % 100 == 0:
+            print(f"Episode {episode + 1}: Total Reward = {total_rewards}")
 
-    while not done:
-        action = np.argmax(agent.q_table[state])
-        next_state, reward, terminated, truncated, info = env.step(action)
-        done = terminated or truncated
-        state = next_state
-        total_rewards += reward
+    print("Training completed.")
 
-    print(f"Test Episode {episode + 1}: Total Reward = {total_rewards}")
+    # Testing the trained agent
+    num_test_episodes = 10
+    for episode in range(num_test_episodes):
+        state, info = env.reset()
+        done = False
+        total_rewards = 0
+
+        while not done:
+            action = np.argmax(agent.q_table[state])
+            next_state, reward, terminated, truncated, info = env.step(action)
+            done = terminated or truncated
+            state = next_state
+            total_rewards += reward
+
+        print(f"Test Episode {episode + 1}: Total Reward = {total_rewards}")
