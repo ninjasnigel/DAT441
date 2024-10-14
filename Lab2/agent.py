@@ -41,7 +41,7 @@ class SARSA_Agent(Agent):
 class ExpectedSARSA_Agent(Agent):
     def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05):
         super().__init__(state_space, action_space)
-        self.q_table = np.zeros((state_space, action_space))
+        self.q_table = np.random.uniform(low=0.01, high=0.02, size=(state_space, action_space))
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon
@@ -52,34 +52,37 @@ class ExpectedSARSA_Agent(Agent):
         return np.argmax(self.q_table[state])  # Exploitation
 
     def observe(self, state, action, reward, next_state, done):
-        # Calculate the expected value of the next state
-        expected_value = 0
-        for next_action in range(self.action_space):
-            if next_action == np.argmax(self.q_table[next_state]):
-                prob = 1 - self.epsilon + (self.epsilon / self.action_space)  # Probability of taking the best action
-            else:
-                prob = self.epsilon / self.action_space  # Probability of taking a suboptimal action
-            
-            expected_value += prob * self.q_table[next_state, next_action]
-
+        # Handle terminal state
+        if done:
+            expected_value = 0
+        else:
+            # Calculate the expected value of the next state
+            best_next_action = np.argmax(self.q_table[next_state])
+            expected_value = 0
+            for next_action in range(self.action_space):
+                if next_action == best_next_action:
+                    prob = (1 - self.epsilon) + (self.epsilon / self.action_space)
+                else:
+                    prob = self.epsilon / self.action_space
+                expected_value += prob * self.q_table[next_state, next_action]
+        
         # Update Q-value using the Expected SARSA update rule
-        self.q_table[state, action] += self.alpha * (reward + self.gamma * expected_value - self.q_table[state, action])
+        td_target = reward + self.gamma * expected_value
+        td_error = td_target - self.q_table[state, action]
+        self.q_table[state, action] += self.alpha * td_error
+
 
 
 class QLearningAgent(Agent):
     def __init__(self, state_space, action_space, gamma=0.95, alpha=0.8, epsilon=0.05):
         super().__init__(state_space, action_space)
-        self.q_table = np.random.uniform(low=0.001, high=0.002, size=(state_space, action_space))
+        self.q_table = np.random.uniform(low=0.1, high=0.2, size=(state_space, action_space))
         #self.q_table = np.zeros((state_space, action_space))
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
-
-    def map_state_to_index(self, state):
-        # This is an example for mapping a tuple state to an index
-        return hash(state) % self.state_space  # Ensure it fits within the table size
 
     def observe(self, state, action, reward, next_state, done):
         best_next_action = np.argmax(self.q_table[next_state])
@@ -99,7 +102,6 @@ class QLearningAgent(Agent):
             action = np.argmax(self.q_table[state])
         return action
 
-
         # self.q_table[state, action] += self.alpha * (reward +  self.gamma * self.q_table[next_state, best_next_action] - self.q_table[state, action])
 
 
@@ -114,7 +116,6 @@ class Double_QLearningAgent(Agent):
         self.coin = coin
 
     def act(self, state):
-
         if np.random.rand() < self.epsilon:
             return np.random.randint(self.action_space)  # Exploration
         else:
