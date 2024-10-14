@@ -31,7 +31,7 @@ action_dim = env.action_space.n
 state_dim = env.observation_space.n
 
 agents =  [agentfile.QLearningAgent(state_dim, action_dim), \
-          #agentfile.SARSA_Agent(state_dim, action_dim), \
+          agentfile.SARSA_Agent(state_dim, action_dim), \
           agentfile.ExpectedSARSA_Agent(state_dim, action_dim), \
           agentfile.Double_QLearningAgent(state_dim, action_dim)]
 
