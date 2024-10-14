@@ -15,9 +15,9 @@ class Agent(object):
         return np.random.randint(self.action_space)
     
 class SARSA_Agent(Agent):
-    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05):
+    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05, q_table=None):
         super().__init__(state_space, action_space)
-        self.q_table = np.random.uniform(low=0.1, high=0.2, size=(state_space, action_space))
+        self.q_table = q_table
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon
@@ -42,9 +42,9 @@ class SARSA_Agent(Agent):
         self.q_table[state, action] += self.alpha * (target - self.q_table[state, action])
 
 class ExpectedSARSA_Agent(Agent):
-    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05):
+    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05, q_table=None):
         super().__init__(state_space, action_space)
-        self.q_table = np.random.uniform(low=0.01, high=0.02, size=(state_space, action_space))
+        self.q_table = q_table
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon
@@ -77,9 +77,9 @@ class ExpectedSARSA_Agent(Agent):
 
 
 class QLearningAgent(Agent):
-    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.8, epsilon=0.05):
+    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05, q_table=None):
         super().__init__(state_space, action_space)
-        self.q_table = np.random.uniform(low=0.1, high=0.2, size=(state_space, action_space))
+        self.q_table = q_table
         #self.q_table = np.zeros((state_space, action_space))
         self.gamma = gamma
         self.alpha = alpha
@@ -108,10 +108,10 @@ class QLearningAgent(Agent):
         # self.q_table[state, action] += self.alpha * (reward +  self.gamma * self.q_table[next_state, best_next_action] - self.q_table[state, action])
 
 class Double_QLearningAgent(Agent):
-    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05, coin=0.5):
+    def __init__(self, state_space, action_space, gamma=0.95, alpha=0.1, epsilon=0.05, q_table=None, coin=0.5):
         super().__init__(state_space, action_space)
-        self.q_table_1 = np.random.uniform(low=0.1, high=0.2, size=(state_space, action_space))
-        self.q_table_2 = np.random.uniform(low=0.1, high=0.2, size=(state_space, action_space))
+        self.q_table_1 = q_table
+        self.q_table_2 = q_table
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon

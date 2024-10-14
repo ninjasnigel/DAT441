@@ -29,11 +29,16 @@ except:
 
 action_dim = env.action_space.n
 state_dim = env.observation_space.n
+Q_MIN = 0.1
+Q_MAX = 0.2
+q_table = np.random.uniform(low=Q_MIN, high=Q_MAX, size=(state_dim, action_dim))
 
-agents =  [agentfile.QLearningAgent(state_dim, action_dim), \
-          agentfile.SARSA_Agent(state_dim, action_dim), \
-          agentfile.ExpectedSARSA_Agent(state_dim, action_dim), \
-          agentfile.Double_QLearningAgent(state_dim, action_dim)]
+agents = [
+    agentfile.QLearningAgent(state_dim, action_dim, q_table=q_table),
+    agentfile.SARSA_Agent(state_dim, action_dim, q_table=q_table),
+    agentfile.ExpectedSARSA_Agent(state_dim, action_dim, q_table=q_table),
+    agentfile.Double_QLearningAgent(state_dim, action_dim, q_table=q_table),
+]
 
 print("Agents found and instantiated: ", agents)
 
