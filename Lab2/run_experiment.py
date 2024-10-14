@@ -34,10 +34,10 @@ Q_MAX = 0.2
 q_table = np.random.uniform(low=Q_MIN, high=Q_MAX, size=(state_dim, action_dim))
 
 agents = [
-    agentfile.QLearningAgent(state_dim, action_dim, q_table=q_table),
-    agentfile.SARSA_Agent(state_dim, action_dim, q_table=q_table),
-    agentfile.ExpectedSARSA_Agent(state_dim, action_dim, q_table=q_table),
-    agentfile.Double_QLearningAgent(state_dim, action_dim, q_table=q_table),
+    agentfile.QLearningAgent(state_dim, action_dim, q_table=np.copy(q_table)),
+    agentfile.SARSA_Agent(state_dim, action_dim, q_table=np.copy(q_table)),
+    agentfile.ExpectedSARSA_Agent(state_dim, action_dim, q_table=np.copy(q_table)),
+    agentfile.Double_QLearningAgent(state_dim, action_dim, q_table=np.copy(q_table)),
 ]
 
 print("Agents found and instantiated: ", agents)
