@@ -120,7 +120,7 @@ plt.show()
 
 
 # Q_TESTS = [(-0.5, -0.25), (0.01, 0.02), (0.1, 0.2), (0.5, 1.0), (1.0, 2.0), (5.0, 10.0)]
-Q_TESTS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9]
+Q_TESTS = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 
 q_rewards = []
@@ -162,6 +162,8 @@ for Q_VALUE in Q_TESTS:
     q_rewards.append(rewards_all_episodes)
     last_q_tables.append(agent.q_table)
 
+print(last_q_tables)
+
 # Plot cumulative rewards
 for i, rewards in enumerate(q_rewards):
     cumulative_rewards = np.cumsum(rewards)
@@ -176,8 +178,14 @@ plt.show()
 #save plot
 
 
-def plot_q_table(q_table, env):
+def plot_q_table(q_table, env='FrozenLake'):
     # Compute the sum of Q-values for the alpha scale (transparency)
+    #if env == 'FrozenLake':
+    #    x=4
+    #    y=4
+    #else:
+    #    x=6
+    #    y=1
     q_values_sum = np.sum(q_table, axis=1).reshape(4, 4)
 
     # Create the plot with a more visually appealing figure size
@@ -224,7 +232,10 @@ def plot_q_table(q_table, env):
     plt.title("Greedy policy", fontsize=16, pad=20)
     plt.gca().invert_yaxis()  # Flip y-axis to match grid layout
     plt.tight_layout()
+    plt.savefig('cool_plot_arrows_pretty_af_ngl.png')
     plt.show()
 
 # Example usage:
 plot_q_table(last_q_tables[0], env)
+
+print()

@@ -15,7 +15,6 @@ class RiverSwim(gym.Env):
 
     def step(self, action):
         assert self.action_space.contains(action)
-        
 
         reward = 0
 
